@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  imap2imap:
+    container_name: imap2imap
+    restart: always
+    image: ghcr.io/the-kube-way/imap2imap:latest
+    volumes:
+      - ./config:/config:ro

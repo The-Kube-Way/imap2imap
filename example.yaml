@@ -1,0 +1,20 @@
+common:
+  debug: true
+  sleep: 300
+  sleep_var_pct: 50
+
+src_imap:
+  host: imap.example.com
+  ssl: true
+  user: user
+  password: password
+  mailbox: INBOX
+  move_to_mailbox: forwarded
+  mark_as_seen: true
+
+dest_imap:
+  host: imap.example.org
+  ssl: true
+  user: user
+  password: password
+  mailbox: INBOX

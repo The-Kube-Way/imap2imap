@@ -1,0 +1,4 @@
+ignored:
+  # Targeting continuous integration: no pinned version
+  - DL3007
+  - DL3018
