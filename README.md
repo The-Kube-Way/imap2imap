@@ -31,6 +31,8 @@ python3 imap2smtp.py -c config.yaml
 A Docker image is available at `ghcr.io/the-kube-way/imap2imap`.  
 Only a `latest` tag representing the main branch is present.
 
+You may want to use the `TZ` environment variable to set the timezone.
+
 ## Configuration file format
 
 See `example.yaml`.  
