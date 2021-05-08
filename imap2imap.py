@@ -47,7 +47,7 @@ class Imap2Imap(threading.Thread):
         # Initialize vars
         self.config_path = config_path
         self.config = None
-        self.sleep_time = None
+        self.base_sleep_time = None
         # exit event: exit when set
         self.exit_event = threading.Event()
         self.watchdog = time()
@@ -74,7 +74,7 @@ class Imap2Imap(threading.Thread):
             else logging.INFO
         )
 
-        self.sleep_time = self.config['common'].get('sleep', None)
+        self.base_sleep_time = self.config['common'].get('sleep', None)
         sleep_var_pct = self.config['common'].get('sleep_var_pct', None)
         while not self.exit_event.is_set():
 
@@ -87,7 +87,7 @@ class Imap2Imap(threading.Thread):
                 self.log.exception("Exception raised during forward()")
                 success = False
 
-            if self.sleep_time is None:  # Run only once
+            if self.base_sleep_time is None:  # Run only once
                 sys_exit(not success)  # 0 on success
 
             # Try again after 10s if case of error
@@ -95,28 +95,29 @@ class Imap2Imap(threading.Thread):
                 sleep(10)
                 continue
 
+            sleep_time = self.base_sleep_time
             if sleep_var_pct:
                 random_delta = \
                     (2*random() - 1.0) * (sleep_var_pct / 100) \
-                    * self.sleep_time
+                    * self.base_sleep_time
                 self.log.debug(
                     "Adding %.2f seconds for randomness",
                     random_delta
                 )
-                self.sleep_time += random_delta
+                sleep_time += random_delta
 
             self.watchdog = time()
 
-            self.log.debug("Waiting %.2f seconds...", self.sleep_time)
-            self.exit_event.wait(self.sleep_time)
+            self.log.debug("Waiting %.2f seconds...", sleep_time)
+            self.exit_event.wait(sleep_time)
         self.log.info("Exited")
 
     def healthy(self) -> bool:
         """
         Return true if the thread is not dead
         """
-        if self.sleep_time:
-            timeout = 2 * self.sleep_time
+        if self.base_sleep_time:
+            timeout = 3 * self.base_sleep_time
         else:
             timeout = 600
         return time() - self.watchdog < timeout
