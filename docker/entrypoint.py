@@ -63,6 +63,7 @@ for config_file in listdir(config_directory):
 while True:
     for config_file in threads:
         if not threads[config_file].healthy():
+            log.error("Thread for %s is not healthy, exiting...", config_file)
             break
     sleep(60)
 sys_exit(1)

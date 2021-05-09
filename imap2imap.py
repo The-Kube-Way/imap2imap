@@ -422,6 +422,7 @@ if __name__ == '__main__':
 
     while True:
         if not imap2imap.healthy():
+            print("Thread is not healthy, exiting...")
             break
         sleep(60)
     sys_exit(1)
