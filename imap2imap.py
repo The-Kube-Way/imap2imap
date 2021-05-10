@@ -8,6 +8,7 @@ See README.md
 import argparse
 import email
 import imaplib
+import json
 import logging
 import signal
 import threading
@@ -202,14 +203,19 @@ class Imap2Imap(threading.Thread):
             self.dest_imap.logout()
             self.log.debug("Destination IMAP closed")
 
-        # Use print() to have fully logfmt compliant line (no prefix)
-        print(
-            "type=stats "
-            f"to={dest_imap_config.get('host')}_"
-            f"{dest_imap_config.get('user')} "
-            f"forward_success={counter_success} "
-            f"forward_failure={counter_failure}"
-        )
+        # Use print() to have fully json compliant line (no prefix)
+        print(json.dumps(
+            {
+                "type": "stats",
+                "from": f"{src_imap_config.get('host')}_"
+                        f"{src_imap_config.get('user')}",
+                "to": f"{dest_imap_config.get('host')}_"
+                      f"{dest_imap_config.get('user')}",
+                "forward_success": counter_success,
+                "forward_failure": counter_failure
+            }
+        ))
+
         return True
 
     def setup_imap(self, imap_config):
