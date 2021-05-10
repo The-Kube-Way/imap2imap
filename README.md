@@ -56,8 +56,7 @@ All sections are required (even if there are empty).
 - password: (str) IMAP password
 - mailbox: (str) mailbox name to check for emails to forward. Default to `'INBOX'`.
 - mark_as_seen: (bool) mark forwarded emails as seen. Default to `false`.
-- move_to_mailbox: (str) move forwarded emails to different mailbox (on the source IMAP server) after forwarding (e.g. 'Fowarded emails'). Set to `null` to disable. Default to `forwarded`
-**Take care that all emails in `mailbox` will be forwarded at each loop, thus using move_to_mailbox is strongly advised**
+- move_to_mailbox: (str) move forwarded emails to different mailbox (on the source IMAP server) after forwarding (e.g. 'Fowarded emails'). Set to `null` to disable. Default to `forwarded`. **This folder must exist. Take care that all emails in `mailbox` will be forwarded at each loop, thus using move_to_mailbox is strongly advised**
 
 ### dest_imap section
 
