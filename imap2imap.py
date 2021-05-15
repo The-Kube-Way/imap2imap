@@ -366,7 +366,7 @@ class Imap2Imap(threading.Thread):
         except (imaplib.IMAP4.error, OSError) as imap_exception:
             self.log.exception(imap_exception)
             self.log.error("Failed to upload message")
-            return None
+            return False
 
     def postprocess_message(
             self,
