@@ -10,8 +10,10 @@ src_imap:
   user: user
   password: password
   mailbox: INBOX
-  move_to_mailbox: forwarded
-  mark_as_seen: true
+  on_success:
+    delete_msg: false
+    move_to_mailbox: forwarded
+    mark_as_seen: true
 
 dest_imap:
   host: imap.example.org

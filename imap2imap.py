@@ -121,6 +121,10 @@ class Imap2Imap(threading.Thread):
         """
         Return true if the thread is not dead
         """
+        # Always return True if the config is disabled
+        if not self.config['common'].get('enabled', True):
+            return True
+
         if self.base_sleep_time:
             timeout = 3 * self.base_sleep_time
         else:
@@ -140,6 +144,8 @@ class Imap2Imap(threading.Thread):
         else:
             self.log.error("Source IMAP failed")
             return False
+        on_success_config = src_imap_config.get('on_success', {})
+
         # Destination IMAP will be open only if there are messages to forward
         self.dest_imap = None
 
@@ -190,8 +196,9 @@ class Imap2Imap(threading.Thread):
                 self.postprocess_message(
                     self.src_imap,
                     msg_id,
-                    src_imap_config.get('move_to_mailbox', 'forwarded'),
-                    src_imap_config.get('mark_as_seen', False),
+                    on_success_config.get('delete_msg', False),
+                    on_success_config.get('move_to_mailbox', 'forwarded'),
+                    on_success_config.get('mark_as_seen', False)
                 )
             else:
                 counter_failure += 1
@@ -365,6 +372,7 @@ class Imap2Imap(threading.Thread):
             self,
             imap,
             msg_id,
+            delete_msg,
             destination_mailbox,
             mark_as_seen):
         """
@@ -373,6 +381,7 @@ class Imap2Imap(threading.Thread):
         Parameters:
         imap: (imaplib.IMAP4) Connection to use
         msg_id: (str) ID of the message (IMAP ID)
+        delete_msg: (bool) Delete message
         destination_mailbox: (str) Name of the destination mailbox
                                    or 'None' to do nothing
         mark_as_seen: (bool) Mark the email as seen
@@ -380,7 +389,19 @@ class Imap2Imap(threading.Thread):
         Return:
         True on success, else False
         """
+        if delete_msg and (mark_as_seen or destination_mailbox):
+            self.log.warning(
+                "'delete_msg' takes precedence over "
+                "mark_as_seen and destination_mailbox: "
+                "message will be deleted"
+            )
+
         try:
+            if delete_msg:
+                imap.store(msg_id, '+FLAGS', '\\Deleted')
+                self.log.debug("Message deleted")
+                return True
+
             if mark_as_seen:
                 imap.store(msg_id, '+FLAGS', '\\Seen')
                 self.log.debug("Message marked as seen")

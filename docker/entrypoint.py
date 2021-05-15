@@ -28,14 +28,21 @@ log.addHandler(stream_handler)
 
 
 # Stop threads and exit
+def stop_threads():
+    """
+    Stop all threads gracefully
+    """
+    log.info("Exiting gracefully now...")
+    for key in threads:
+        threads[key].exit_event.set()
+
+
 def exit_gracefully(sigcode, _frame):
     """
     Exit immediately gracefully
     """
     log.info("Signal %d received", sigcode)
-    log.info("Exiting gracefully now...")
-    for key in threads:
-        threads[key].exit_event.set()
+    stop_threads()
     sys_exit(0)
 
 
@@ -64,6 +71,6 @@ while True:
     for config_file in threads:
         if not threads[config_file].healthy():
             log.error("Thread for %s is not healthy, exiting...", config_file)
-            break
+            stop_threads()
+            sys_exit(1)
     sleep(60)
-sys_exit(1)

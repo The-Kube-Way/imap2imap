@@ -56,8 +56,10 @@ All sections are required (even if there are empty).
 - user: (str) IMAP user
 - password: (str) IMAP password
 - mailbox: (str) mailbox name to check for emails to forward. Default to `'INBOX'`.
-- mark_as_seen: (bool) mark forwarded emails as seen. Default to `false`.
-- move_to_mailbox: (str) move forwarded emails to different mailbox (on the source IMAP server) after forwarding (e.g. 'Fowarded emails'). Set to `null` to disable. Default to `forwarded`. **This folder must exist. Take care that all emails in `mailbox` will be forwarded at each loop, thus using move_to_mailbox is strongly advised**
+- on_success: (dict) actions to execute when a message is successfully forwarded
+  - delete_msg: (bool) Delete email on the source IMAP server
+  - mark_as_seen: (bool) mark forwarded emails as seen. Default to `false`.
+  - move_to_mailbox: (str) move forwarded emails to different mailbox (on the source IMAP server) after forwarding (e.g. 'Fowarded emails'). Set to `null` to disable. Default to `forwarded`. **This folder must exist. Take care that all emails in `mailbox` will be forwarded at each loop, thus using move_to_mailbox is strongly advised**
 
 ### dest_imap section
 
