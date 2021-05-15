@@ -1,4 +1,5 @@
 common:
+  enabled: true
   debug: true
   sleep: 300
   sleep_var_pct: 50

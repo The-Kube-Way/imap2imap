@@ -75,6 +75,10 @@ class Imap2Imap(threading.Thread):
             else logging.INFO
         )
 
+        if not self.config['common'].get('enabled', True):
+            self.log.info("This config file is disabled")
+            self.exit_event.wait()
+
         self.base_sleep_time = self.config['common'].get('sleep', None)
         sleep_var_pct = self.config['common'].get('sleep_var_pct', None)
         while not self.exit_event.is_set():
