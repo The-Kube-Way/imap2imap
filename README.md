@@ -40,7 +40,6 @@ All sections are required (even if there are empty).
 
 ### common section
 
-- enabled: (bool) Disable this config file. Default to `false`.
 - debug: (bool) Enable debugging mode (more verbose). Default to `false`.
 - sleep: In case of error a new attempt will be made 10s after indefinitely (except for one-time run)
   - not present: exit immediately after one run (could be useful to use with cron)
