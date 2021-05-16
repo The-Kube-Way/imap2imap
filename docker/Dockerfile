@@ -3,7 +3,7 @@ FROM python:3.9-alpine
 RUN apk add --no-cache tzdata
 
 COPY requirements.txt /opt
-RUN pip install -r /opt/requirements.txt
+RUN pip install --no-cache -r /opt/requirements.txt
 
 COPY docker/entrypoint.py /imap2imap/docker/
 COPY imap2imap.py /imap2imap/
