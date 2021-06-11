@@ -3,9 +3,9 @@ Docker entrypoint
 """
 
 import logging
+import os
+import resource
 import signal
-from os import listdir
-from os.path import isfile, join
 from sys import exit as sys_exit
 from time import sleep
 
@@ -25,6 +25,14 @@ stream_handler.setFormatter(
     )
 )
 log.addHandler(stream_handler)
+
+
+# Respect Docker memory limit
+# https://carlosbecker.com/posts/python-docker-limits/
+if os.path.isfile('/sys/fs/cgroup/memory/memory.limit_in_bytes'):
+    with open('/sys/fs/cgroup/memory/memory.limit_in_bytes') as limit:
+        mem = int(limit.read())
+        resource.setrlimit(resource.RLIMIT_AS, (mem, mem))
 
 
 # Stop threads and exit
@@ -53,9 +61,9 @@ signal.signal(signal.SIGTERM, exit_gracefully)  # issued by docker stop
 
 # Create threads
 threads = {}  # key is path to config file, value is Thread object
-for config_file in listdir(config_directory):
-    config_path = join(config_directory, config_file)
-    if isfile(config_path) and config_path.endswith(".yaml"):
+for config_file in os.listdir(config_directory):
+    config_path = os.path.join(config_directory, config_file)
+    if os.path.isfile(config_path) and config_path.endswith(".yaml"):
         log.info("Starting thread for %s...", config_path)
         threads[config_file] = Imap2Imap(config_path)
         threads[config_file].daemon = True
