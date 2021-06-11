@@ -328,7 +328,7 @@ class Imap2Imap(threading.Thread):
 
             return email.message_from_bytes(data[0][1])
 
-        except (imaplib.IMAP4.error, OSError) as imap_exception:
+        except (imaplib.IMAP4.error, OSError, MemoryError) as imap_exception:
             self.log.exception(imap_exception)
             return None
 
