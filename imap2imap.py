@@ -166,6 +166,7 @@ class Imap2Imap(threading.Thread):
                     "Error while fetching message %s, continue",
                     msg_id
                 )
+                counter_failure += 1
                 continue
 
             self.log.debug(
