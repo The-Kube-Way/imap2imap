@@ -99,7 +99,7 @@ class Imap2Imap(threading.Thread):
             sleep_time = self.base_sleep_time
             if sleep_var_pct:
                 random_delta = \
-                    (2*random() - 1.0) * (sleep_var_pct / 100) \
+                    (2 * random() - 1.0) * (sleep_var_pct / 100) \
                     * self.base_sleep_time
                 self.log.debug(
                     "Adding %.2f seconds for randomness",
