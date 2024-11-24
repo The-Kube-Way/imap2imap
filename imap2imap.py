@@ -200,6 +200,14 @@ class Imap2Imap(threading.Thread):
             # Update watchdog also for each message processed to avoid timeout for large mailboxes
             self.watchdog = time()
 
+            if counter_success % 100 == 0 or counter_failure % 100 == 0:
+                self.log.info(
+                    "Successfuly forwarded %d messages (%d failed) over %d so far, continuing...",
+                    counter_success,
+                    counter_failure,
+                    len(message_list)
+                )
+
         self.src_imap.expunge()
         self.src_imap.close()
         self.src_imap.logout()
