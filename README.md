@@ -5,6 +5,7 @@
 
 This tool helps to gather emails from an IMAP server and forward them to another IMAP server.  
 This is especially useful if your provider prevents you from forwarding your emails automatically.
+This tool is licensed under the MIT license.
 
 This tool uses almost only built-in libraries (except PyYAML) and should works on any Python 3.4+
 
