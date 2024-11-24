@@ -107,8 +107,6 @@ class Imap2Imap(threading.Thread):
                 )
                 sleep_time += random_delta
 
-            self.watchdog = time()
-
             self.log.debug("Waiting %.2f seconds...", sleep_time)
             self.exit_event.wait(sleep_time)
         self.log.info("Exited")
@@ -196,6 +194,9 @@ class Imap2Imap(threading.Thread):
             else:
                 counter_failure += 1
                 self.log.error("Failed to forward message %s", msg_id)
+
+            # Update watchdog for each message processed to avoid timeout for large mailboxes
+            self.watchdog = time()
 
         self.src_imap.expunge()
         self.src_imap.close()
